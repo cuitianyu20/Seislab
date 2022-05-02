@@ -1,0 +1,371 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #info-container{background: #fff;border-bottom: 2px solid #cccccc;min-height: 670px;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #info-title h5{color: #23527C;}
+    #insert-info div i{color: red;}
+    #insert-data{min-height: 120px;}
+    #insert-data-info span i{margin-top: 10px;}
+    #operate-btn{margin-top: 10px;margin-bottom: 5px;text-align: center;}
+    .fileinput-button{ position: relative;display: inline-block;overflow: hidden;}
+    .fileinput-button input{position: absolute;left: 0px; top: 0px;opacity: 0;-ms-filter: 'alpha(opacity=0)';}
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle!important;
+    }
+</style>
+<script src="__STATIC__/js/jquery.tabletojson.min.js"></script>
+<div class="row" id="info-container">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：上传数据->更新地震目录</strong></h6>
+        <hr>
+    </div>
+    <div class="col-md-12" id="insert-info">
+        <!--获取user_id的隐藏域-->
+        <input type="hidden" name="user_id" id="user_id" value="{$Think.session.user_id}">
+        <!--数据上传相关说明-->
+        <div  id="insert-data" class="col-md-11 col-md-offset-1">
+            <div class="col-md-3">
+                <span><i class="fa fa-exclamation-triangle"></i></span>数据上传相关说明:
+            </div>
+            <div class="col-md-9" id="insert-data-info">
+                <span><i class="fa fa-bell"></i>请上传地震目录信息文件！</span><br>
+                <span><i class="fa fa-bell"></i>文件格式必须为excel文件！</span><br>
+                <span><i class="fa fa-bell"></i>上传的地震目录数据需在已有数据最新时间之后！</span><br>
+                <span><i class="fa fa-bell"></i>参考格式请点击下载<a href="__STATIC__/file/example.xlsx" style="color: #23527C;"><strong>example.xlsx</strong></a></span><br>
+
+            </div>
+        </div>
+        <hr style="width: 100%;color:#000;">
+    </div>
+    <div class="col-md-12" id="operate-btn">
+        <div class="col-md-4">
+            <button class='btn btn-success fileinput-button'>
+                <span>导入地震目录</span>
+                <input type='file' name="uploads-data" id="uploads-data" onchange="readData(this)">
+            </button>
+        </div>
+        <div class="col-md-2">
+            <input type="button" class="btn btn-info" name="edit" id="edit" value="编辑">
+        </div>
+        <div class="col-md-2">
+            <input type="button" class="btn btn-primary" name="save" id="save" value="保存">
+        </div>
+        <div class="col-md-2">
+            <input type="button" class="btn btn-danger" name="submit" id="submit" value="上传">
+        </div>
+    </div>
+    <div class="col-md-12 table-responsive">
+        <table id="demo" class="table table-bordered table-condensed">
+            <thead id="table-header"><tr class="success"></tr></thead>
+            <tbody id="table-body"></tbody>
+        </table>
+
+        <!-- 翻页按钮栏-->
+        <div style="text-align: center;">
+            <button id="bt0" class="oaBtn">首页</button>
+            <button id="bt1" class="oaBtn">上一页</button>
+            <button id="bt2" class="oaBtn">下一页</button>
+            <button id="bt3" class="oaBtn">尾页</button>
+            当前第<span id="page" class="pageNum"></span>页
+            共<span id="pageSize" class="pageNum"></span>页
+            共<span id="total" class="pageNum"></span>条数据
+            到第<input type="text" id="number" style="width: 40px;padding: 0px;text-align: center;" />页
+            <button id="ensure" class="oaBtn">确定</button>
+            <span>10条/页</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    var wb;//读取完成的数据
+    var rABS = false; //是否将文件读取为二进制字符串
+    var datalen=0;	// data数据总条数
+    var dataNum = 10; // 每页展示的数据条数
+
+    /* 读取excel数据文件 */
+    function readData(obj) {
+        if (!obj.files) {
+            return;
+        }
+        const IMPORTFILE_MAXSIZE = 1 * 2048; //这里可以自定义控制导入文件大小
+        var suffix = obj.files[0].name.split(".")[1]
+        if (suffix != 'xls' && suffix != 'xlsx') {
+            alert('导入的文件格式不正确!');
+            return
+        }
+        if (obj.files[0].size / 1024 > IMPORTFILE_MAXSIZE) {
+            alert('导入的表格文件不能大于2M');
+            return
+        }
+        var f = obj.files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var data = e.target.result;
+            if (rABS) {
+                wb = XLSX.read(btoa(fixdata(data)), {
+                    type: 'base64'
+                });
+            } else {
+                wb = XLSX.read(data, {
+                    type: 'binary'
+                });
+            }
+            //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
+            //wb.Sheets[Sheet名]获取第一个Sheet的数据
+            var jsonData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+            $(function () {
+                $.ajax({
+                    type:'post',
+                    url: "{:url('admin/verify')}",
+                    contentType: "application/json; charset=utf-8",
+                    cache:false,
+                    data:JSON.stringify(jsonData),
+                    dataType:'json',
+                    success: function (data) {
+                        createTable(data);
+                    }
+                });
+            });
+        };
+        if (rABS) {
+            reader.readAsArrayBuffer(f);
+        } else {
+            reader.readAsBinaryString(f);
+        }
+    }
+
+    //实现编辑操作
+    $(function () {
+        $("#edit").on('click',function () {
+            if ($("#demo").tableToJSON().length == 0){
+                alert('请先导入地震目录文件');
+            }else {
+                $("#table-body tr td").attr('contenteditable','true');
+            }
+        });
+    });
+
+    // 实现保存信息并进行数据合格检测
+    $(function () {
+        $("#save").on('click',function () {
+            if ($("#demo").tableToJSON().length == 0){
+                alert('请先导入地震目录文件');
+            }else {
+                $("#table-body tr td").attr('contenteditable','false');
+                $.ajax({
+                    type:'post',
+                    url: "{:url('admin/editVerify')}",
+                    contentType: "application/json; charset=utf-8",
+                    cache:false,
+                    data:JSON.stringify($("#demo").tableToJSON()),
+                    dataType: 'json',
+                    success:function (data) {
+                        //清除列表
+                        $('#table-header tr').empty();
+                        $('#table-body').empty();
+                        createTable(data);
+                    }
+                });
+            }
+        });
+    });
+
+    //上传数据
+    $(function () {
+        $("#submit").on('click',function () {
+            if ($("#demo").tableToJSON().length == 0){
+                alert('请先导入地震目录文件');
+            }else {
+                $.ajax({
+                    type:'post',
+                    url: "{:url('admin/quakeUpload')}",
+                    contentType: "application/json; charset=utf-8",
+                    cache:false,
+                    data:JSON.stringify($("#demo").tableToJSON()),
+                    dataType: 'json',
+                    success:function (data) {
+                        if (data.sta == 0){
+                            alert(data.message);
+                            window.location.href =  "{:url('admin/quakeList')}";
+                        }else {
+                            alert(data.message);
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+
+    /* 文件流转BinaryString */
+    function fixdata(data) {
+        var o = "",
+            l = 0,
+            w = 10240;
+        for(; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w, l * w + w)));
+        o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+        return o;
+    }
+
+    /* 将json数据转换成表格table */
+    function createTable(data) {
+        //获取当前数据长度
+        datalen=data.length;
+        // 总条数
+        $("#total").html(datalen);
+        // 总页数  向上取整
+        var pageSize = Math.ceil(datalen/dataNum);
+        $("#pageSize").html(pageSize);
+        // 当前第N页
+        $("#page").html(1);
+        //遍历数据，获取每一列的键名
+        var keyAry = [];
+        for (var key in data[0]) {
+            keyAry.push(key);
+        }
+        //定义表头数组长度
+        var keyArylen = keyAry.length;
+        //循环输出表头
+        for (var n = 0;n<keyArylen;n++)
+        {
+            if (n == 1){
+                $( `<th style="color: red">${keyAry[n]}</th>`).appendTo($("#table-header tr"));
+            }else {
+                $( `<th style="color: blue">${keyAry[n]}</th>`).appendTo($("#table-header tr"));
+            }
+        }
+        //循环输出表格信息
+        for (var i=0;i<datalen;i++)
+        {
+            // 通过循环,每有一条数据添加一行表格
+            var tr = $("<tr style='display: none;'></tr>");
+            for (var key in data[i])
+            {
+                if (key == "status"){
+                    if (data[i][key] == '验证通过!'){
+                        $(`<td style="color: green;">${data[i][key]}</td>`).addClass(key).appendTo(tr);
+                    }else {
+                        $(`<td style="color: red;" ">${data[i][key]}</td>`).addClass(key).appendTo(tr);
+                    }
+                }else {
+                    $(`<td>${data[i][key]}</td>`).addClass(key).appendTo(tr);
+                }
+            }
+            $("#table-body").append(tr);
+            //第一页显示
+            if (i < dataNum) {
+                $("#table-body tr").eq(i).show();
+            }else {
+                $("#table-body tr").eq(i).hide();
+            }
+        }
+    }
+
+    /* 设置数据翻页信息 */
+    /* 上一页 */
+    $("#bt1").click(function(){
+        var page = $("#page").html();
+        if (parseInt(page) > 1) {
+            // 先隐藏所有的行（数据）
+            $("#table-body tr").hide();
+            // 点击上一页时当前页数发生变化
+            $("#page").html(parseInt(page)-1);
+            var count = 0;
+            // 定位到上一页
+            var beforePage = parseInt(page)-1; // 假设是2
+            // 显示的数据则是上上一页的后一页，即：
+            var nextData = parseInt(beforePage-1)*dataNum;
+            for (var i02 = parseInt(nextData); i02 <= datalen; i02++) {
+                count += 1;
+                if (count <= dataNum) {
+                    $("#table-body tr").eq(i02).show();
+                }
+            }
+        }
+
+    });
+    /* 到第几页 */
+    $("#ensure").click(function () {
+        var page = $("#page").html();
+        var pageSize = $("#pageSize").html();
+        var a=document.getElementById("number").value;
+        if (a != ""){
+            if (a != parseInt(page) && a <= parseInt(pageSize)){
+                // 先隐藏所有的行（数据）
+                $("#table-body tr").hide();
+                // 点击确定时当前页数发生变化
+                $("#page").html(a);
+                var count = 0;
+                var beforePage = a-1;
+                // 显示的数据则是跳转页面上一页的后一页，即：
+                var nextData = parseInt(a-1)*dataNum;
+                for (var i02 = parseInt(nextData); i02 <= datalen; i02++) {
+                    count += 1;
+                    if (count <= dataNum) {
+                        $("#table-body tr").eq(i02).show();
+                    }
+                }
+            }
+        }
+    });
+    /* 下一页 */
+    $("#bt2").click(function(){
+        var page = $("#page").html();
+        var pageSize = $("#pageSize").html();
+        // 当前页码小于总页码时
+        if (parseInt(page) < parseInt(pageSize)) {
+            // 先隐藏所有的行（数据）
+            $("#table-body tr").hide();
+            // 点击下一页时当前页数发生变化
+            $("#page").html(parseInt(page)+1);
+            // 展示的数据也定位到下一页（nextData~datalen.length）
+            var nextData = parseInt(page)*dataNum;
+            var count = 0;
+            for (var i02 = parseInt(nextData); i02 <= datalen; i02++) {
+                count += 1;
+                if (count <= dataNum) {
+                    $("#table-body tr").eq(i02).show();
+                }
+            }
+        }
+    });
+    /* 首页 */
+    $("#bt0").click(function(){
+        var page = $("#page").html();
+        var pageSize = $("#pageSize").html();
+        // 当前页码大1时
+        if (parseInt(page) > 1) {
+            // 先隐藏所有的行（数据）
+            $("#table-body tr").hide();
+            // 点击首页时当前页码定位到第一页
+            $("#page").html(1);
+            // 展示的数据也定位到第一页（1~dataNum条）
+            for (var i0 = 0; i0 < dataNum; i0++) {
+                $("#table-body tr").eq(i0).show();
+            }
+        }
+    });
+    /* 尾页 */
+    $("#bt3").click(function(){
+        var page = $("#page").html();
+        var pageSize = $("#pageSize").html();
+        if (parseInt(page) < parseInt(pageSize)) {
+            // 先隐藏所有的行（数据）
+            $("#table-body tr").hide();
+            // 点击尾页时页码变为最大码
+            $("#page").html(pageSize);
+            // 展示的数据也定位到最后一页
+            var nextData = parseInt(pageSize-1)*dataNum;
+            // 从倒数第二页的最后一条往后的数据展示出来
+            for (var i03 = parseInt(nextData); i03 <= datalen; i03++) {
+                $("#table-body tr").eq(i03).show();
+            }
+        }
+    });
+</script>
+
+{/block}

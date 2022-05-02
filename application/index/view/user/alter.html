@@ -1,0 +1,172 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #info_container{background: #fff;min-height: 670px;border-bottom: 2px solid #cccccc;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #info-title h5{color: #23527C;}
+</style>
+<!--User Register-->
+<div class="row" id="info_container">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：个人中心->修改密码</strong></h6>
+        <hr>
+    </div>
+    <div>
+        <div class="col-md-6  col-md-offset-2 text-left" id="info-title">
+            <h5><strong>修改密码:</strong></h5>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <form class="form-horizontal" enctype="multipart/form-data" method="post" id="login-info" >
+            <div class="form-group">
+                <label for="inputEmail" class="col-md-2 col-md-offset-1 control-label">注册邮箱:</label>
+                <div class="col-md-6">
+                    <input type="text" name="email" class="form-control" id="inputEmail">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword" class="col-md-2 col-md-offset-1 control-label">新密码:</label>
+                <div class="col-md-6">
+                    <input type="password" name="password" class="form-control" id="inputPassword">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputConfirmPassword" class="col-md-2 col-md-offset-1 control-label">确认密码:</label>
+                <div class="col-md-6">
+                    <input type="password" class="form-control" id="inputConfirmPassword">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-1 col-md-offset-2">
+                    <button type="button" class="btn btn-primary" id="send-btn">发送</button>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" name="security_code" class="form-control" id="inputCode" placeholder="邮箱验证码">
+                </div>
+            </div>
+
+            <!--        接收与传递信息-->
+            <div class="form-group">
+                <input type="hidden" id="user_id" value="{$Think.session.user_id}">
+                <input type="hidden" id="code">
+                <input type="hidden" id="send_time">
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-4">
+                    <button type="button" class="btn btn-success " id="submit-btn">提交</button>
+                </div>
+                <div class="col-md-2">
+                    <a href="{:url('user/userInfo')}"><button type="button" class="btn btn-danger" id="cancel">取消</button></a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#send-btn').on('click',function(){
+            //用ajax提交用户信息
+            var email = $('#inputEmail').val();
+            var user_id = $("#user_id").val();
+            if (!user_id){
+                user_id = "";
+            }
+            if (email==""){
+                alert("请输入注册邮箱！");
+            }else {
+                if(email.match(/^\w+@\w+\.\w+$/)){
+                    $.ajax({
+                        type: 'post',
+                        url: "{:url('user/sendEmail')}",
+                        data:{
+                            'email':email,
+                            'user_id':user_id
+                        },
+                        dataType: 'json',
+                        success: function(data){
+                            switch (data.status)
+                            {
+                                case 2:
+                                    alert(data.message);
+                                    break;
+                                case 1:
+                                    alert(data.message);
+                                    break;
+                                case 0:
+                                    // $("#code").val(""); //清空上一次传递的值
+                                    $("#code").val(data.code);
+                                    // $("#send_time").val(""); //清空上一次传递的值
+                                    $("#send_time").val(data.time);
+                                    alert(data.message);
+                                    break;
+                                case -1:
+                                    alert(data.message);
+                                    break;
+                            }
+
+                        }
+                    });
+                }else {
+                    alert("邮箱格式有误，请检查！");
+                }
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $("#submit-btn").on("click",function () {
+        var code = $("#code").val();
+        console.log(code);
+        var input_code = $("#inputCode").val();
+        console.log(input_code);
+        var new_pd = $("#inputPassword").val();
+        var confirm_pd = $("#inputConfirmPassword").val();
+        var email = $('#inputEmail').val();
+        var time = $("#send_time").val();
+
+        var starttime = new Date(time);
+        //获取当前时间
+        var endtime = new Date();
+        //计算时间差
+        var time_gap = Math.abs(endtime-starttime);
+        var m=parseInt(time_gap/1000);
+        if (new_pd != confirm_pd){
+            alert("密码不一致,请检查！");
+        }else {
+            if (input_code="" || code != input_code){
+                alert("验证码不正确或为空！");
+            }else {
+                if (m < 180){
+                    $.ajax({
+                        type: 'post',
+                        url: "{:url('user/pdSave')}",
+                        data:{
+                            "new_pd": new_pd,
+                            "email" : email
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.status == 0){
+                                alert(data.message);
+                                window.location.href = "{:url('user/logout')}";
+                            }else {
+                                alert(data.message);
+                            }
+                        }
+                    });
+                }else {
+                    alert("验证码已失效，请重新获取！");
+                }
+            }
+        }
+    });
+});
+</script>
+
+
+{/block}

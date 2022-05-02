@@ -1,0 +1,179 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #info-title h5{color: #23527C;}
+    #insert-info div i{color: red;}
+    #insert-data{min-height: 120px;}
+    #insert-data-info span i{margin-top: 10px;}
+</style>
+<!--User Register-->
+<div class="row" style="background: #fff;border-bottom: 2px solid #cccccc;">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：上传数据->单条上传</strong></h6>
+        <hr>
+    </div>
+    <div class="col-md-12">
+        <form class="form-horizontal" action="{:url('index/save')}" enctype="multipart/form-data" method="post" id="insert-info" >
+            <!--获取user_id的隐藏域-->
+            <input type="hidden" name="user_id" value="{$Think.session.user_id}">
+            <!--数据上传相关说明-->
+            <div  id="insert-data" class="col-md-11 col-md-offset-1">
+                <div class="col-md-3">
+                    <span><i class="fa fa-exclamation-triangle"></i></span>数据上传相关说明:
+                </div>
+                <div class="col-md-9" id="insert-data-info">
+                    <span><i class="fa fa-bell"></i>您即将上传的数据务必保证真实有效！</span><br>
+                    <span><i class="fa fa-bell"></i>平台目前只接受MiniSEED格式的数据！</span><br>
+                    <span><i class="fa fa-bell"></i>数据上传成功后需要一段时间管理员进行质量检查，合格后可供用户下载使用！</span><br>
+                </div>
+            </div>
+            <hr style="width: 100%;color:#000;">
+
+            <!--数据上传填写信息-->
+            <div class="col-md-11 col-md-offset-1">
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Network:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="network" class="form-control" placeholder="台网">
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Station Code:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="station" class="form-control" placeholder="台站代码">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">Station Long Name:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="station_long_name" class="form-control" placeholder="完整台站名称" style="margin-top: 10px;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Longitude:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="longitude" class="form-control" placeholder="经度">
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Latitude:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="latitude" class="form-control" placeholder="纬度">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Elevation:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="elevation" class="form-control" placeholder="高程">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Sensor:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="sensor" class="form-control" placeholder="传感器">
+                    </div>
+                    <label  class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Sensor Type:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="sensor_type" class="form-control" placeholder="传感器类型">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Sensor Depth:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="sensor_depth" class="form-control" placeholder="传感器埋深">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>DAS:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="das" class="form-control" placeholder="分布式光纤声传感器(DAS)">
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>DAS Type:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="das_type" class="form-control" placeholder="DAS类型">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Start Time:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="starttime" class="form-control" placeholder="YYYY-MM-DD hh:mm:ss.SSS">
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>End Time:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="endtime" class="form-control" placeholder="YYYY-MM-DD hh:mm:ss.SSS">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Sample Rate:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="sample_rate" class="form-control" placeholder="采样速率">
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Gain:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="gain" class="form-control" placeholder="仪器增益">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Data Stream Recorded:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="data_stream_recorded" class="form-control" placeholder="记录的数据流">
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Channel Code:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="channel_code" class="form-control" placeholder="通道代码">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">
+                        <span><i class="fa fa-asterisk"></i></span>Channel Name:</label>
+                    <div class="col-sm-3">
+                        <input type="text" name="channel" class="form-control" placeholder="通道名称">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="demo_data" class="col-sm-2 control-label" >
+                        <span><i class="fa fa-asterisk"></i></span>Upload Data:</label>
+                    <div class="col-sm-3">
+                        <input type="file" name="demo_data" class="form-control" id="demo_data">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary" id="upload">上传</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{/block}

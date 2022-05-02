@@ -1,0 +1,63 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #info_container{background: #fff;min-height: 670px;border-bottom: 2px solid #cccccc;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #info-title h5{color: #23527C;}
+    #info-edit a{color: #23527C;}
+    #info-edit a:hover{color:#FCDC4B;}
+</style>
+<div class="row" id="info_container">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：个人中心->个人资料</strong></h6>
+        <hr>
+    </div>
+    <div>
+        <div class="col-md-6  col-md-offset-2 text-left" id="info-title">
+            <h5><strong>个人资料:</strong></h5>
+        </div>
+        <div class="col-md-2" id="info-edit">
+            <a href="{:url('user/userEdit',['id'=>$userInfo.id])}"><h5><stong>修改资料</stong></h5></a>
+        </div>
+    </div>
+    <div class="col-md-8 col-md-offset-3 text-left" style="margin-top: 40px;">
+        <div class="col-md-4"><h5><strong>用户名:</strong></h5></div>
+        <div class="col-md-6"><h5><strong>{$userInfo.user_name}</strong></h5></div>
+    </div>
+    <div class="col-md-8 col-md-offset-3 text-left" style="margin-top: 10px;">
+        <div class="col-md-4"><h5><strong>真实姓名:</strong></h5></div>
+        <div class="col-md-6"><h5><strong>{$userInfo.actual_name}</strong></h5></div>
+    </div>
+    <div class="col-md-8 col-md-offset-3 text-left" style="margin-top: 10px;">
+        <div class="col-md-4"><h5><strong>身份:</strong></h5></div>
+        <div class="col-md-6"><h5><strong>
+            {if $userInfo.is_admin == 1} <font color="red">超级管理员</font>
+            {else /}<font color="green">注册会员</font>
+            {/if}
+        </strong></h5></div>
+    </div>
+    <div class="col-md-8 col-md-offset-3 text-left" style="margin-top: 10px;">
+        <div class="col-md-4"><h5><strong>职业:</strong></h5></div>
+        <div class="col-md-6"><h5><strong>{$userInfo.occupation}</strong></h5></div>
+    </div>
+    <div class="col-md-8 col-md-offset-3 text-left" style="margin-top: 10px;">
+        <div class="col-md-4"><h5><strong>手机号:</strong></h5></div>
+        <div class="col-md-6"><h5><strong>{$userInfo.mobile}</strong></h5></div>
+    </div>
+    <div class="col-md-8 col-md-offset-3 text-left" style="margin-top: 10px;">
+        <div class="col-md-4"><h5><strong>邮箱:</strong></h5></div>
+        <div class="col-md-6"><h5><strong>{$userInfo.email}</strong></h5></div>
+    </div>
+    <div class="col-md-8 col-md-offset-3 text-left" style="margin-top: 10px;">
+        <div class="col-md-4"><h5><strong>通讯地址:</strong></h5></div>
+        <div class="col-md-6"><h5><strong>{$userInfo.province}{$userInfo.city}{$userInfo.town}{$userInfo.detail_address}</strong></h5></div>
+    </div>
+    <div class="col-md-8 col-md-offset-3 text-left" style="margin-top: 10px;margin-bottom: 20px;">
+        <div class="col-md-4"><h5><strong>详细地址:</strong></h5></div>
+        <div class="col-md-6"><h5><strong>{$userInfo.detail_address}</strong></h5></div>
+    </div>
+</div>
+
+{/block}

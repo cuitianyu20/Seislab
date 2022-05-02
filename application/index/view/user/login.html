@@ -1,0 +1,81 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #login-whole{background: #fff;border-bottom: 2px solid #cccccc;min-height: 670px;}
+    #login-header h4{margin-top: 20px;color: #23527C;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #info-title h5{color: #23527C;}
+</style>
+
+<!--User Register-->
+<div class="row" id="login-whole">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：个人中心->用户登录</strong></h6>
+        <hr>
+    </div>
+    <div>
+        <div class="col-md-6  col-md-offset-2 text-left" id="info-title">
+            <h5><strong>用户登录:</strong></h5>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <form class="form-horizontal" enctype="multipart/form-data" id="login-info">
+            <div class="form-group">
+                <label for="inputEmail" class="col-md-2 col-md-offset-2 control-label">邮箱:</label>
+                <div class="col-md-5">
+                    <input type="text" name="email" class="form-control" id="inputEmail">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword" class="col-md-2 col-md-offset-2 control-label">密码:</label>
+                <div class="col-md-5">
+                    <input type="password" name="password" class="form-control" id="inputPassword">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-md-offset-4">
+                    <button type="button" class="btn btn-primary" id="submit-btn">登录</button>
+                </div>
+                <div class="col-md-4">
+                    <a href="{:url('user/alter')}"><button type="button" class="btn btn-danger">忘记密码</button></a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $('#submit-btn').on('click',function(){
+            //用ajax提交用户信息
+            $.ajax({
+                type: 'post',
+                url: "{:url('user/loginCheck')}",
+                data: $('#login-info').serialize(),
+                dataType: 'json',
+                success: function(data){
+                    switch (data.status)
+                    {
+                        case 1:
+                            alert(data.message);
+                            window.location.href = "{:url('index/index')}";
+                            break;
+                        case 0:
+                            alert(data.message);
+                            // window.location.back();
+                            break;
+                        case -1:
+                            alert(data.message);
+                            // window.location.back();
+                            break;
+                    }
+
+                }
+            })
+        })
+    })
+</script>
+
+
+{/block}

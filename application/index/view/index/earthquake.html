@@ -1,0 +1,281 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #quake-container{background: #fff;border-bottom: 2px solid #cccccc;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #allmap{width:100%;min-height:700px;border:#ccc solid 2px;overflow: hidden;margin:0;padding:0;font-family:"微软雅黑";}
+    #row_top{background: #0B304B;min-height: 50px;}
+    #row_bottom{background: #0B304B;min-height: 50px;}
+    #circle0{border-radius: 50%;width:2px;height: 2px;background:#d340c3;margin-top: 10px;margin-left: 15px;}
+    #circle1{border-radius: 50%;width:4px;height: 4px;background:#FDF851;margin-top: 10px;margin-left: 15px;}
+    #circle2{border-radius: 50%;width:8px;height: 8px;background:#FCDB4B;margin-top: 10px;margin-left: 15px;}
+    #circle3{border-radius: 50%;width:10px;height: 10px;background:#f08d49;margin-top: 10px;margin-left: 15px;}
+    #circle4{border-radius: 50%;width:16px;height: 16px;background:#E93732;margin-top: 10px;margin-left: 15px;}
+    #circle5{border-radius: 50%;width:20px;height: 20px;background:#B12723;margin-top: 10px;margin-left: 15px;}
+    #circle6{border-radius: 50%;width:30px;height: 30px;background:#e93732;margin-top: 10px;margin-left: 15px;}
+    #data_info{font-size: 4px;color: #fff;margin-top: 5px;}
+    #web_bottom{background: #fff;border-bottom: 2px solid #cccccc;}
+</style>
+
+<div class="row" id="quake-container">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：地震目录</strong></h6>
+        <hr>
+    </div>
+</div>
+<!--图例-->
+<div class="row" id="row_top">
+    <div class="col-md-3" style="margin-top: 5px;">
+        <div class="col-md-2"><div id="circle0"></div></div>
+        <div class="col-md-6"><span style="color: #d340c3;"><small>近五年的地震</small></span></div>
+    </div>
+    <div class="col-md-3" style="margin-top: 5px;">
+        <div class="col-md-2"><div id="circle2"></div></div>
+        <div class="col-md-10"><span style="color: #FCDB4B;"><small>近一个月内震级在4-5级之间的地震</small></span></div>
+    </div>
+    <div class="col-md-3" style="margin-top: 5px;">
+        <div class="col-md-2"><div id="circle4"></div></div>
+        <div class="col-md-10"><span style="color: #E93732;"><small>近一个月内震级在6-7级之间的地震</small></span></div>
+    </div>
+    <div class="col-md-3" style="margin-top: 5px;">
+        <div class="col-md-4"><div id="circle6"></div></div>
+        <div class="col-md-8"><span style="color: #e93732;"><small>近一个月内震级大于8级之间的地震</small></span></div>
+    </div>
+</div>
+<div class="row" id="row_bottom">
+    <div class="col-md-3">
+        <div class="col-md-2"><div id="circle1"></div></div>
+        <div class="col-md-10"><span style="color: #FDF851;"><small>近一个月内震级在3-4级之间的地震</small></span></div>
+    </div>
+    <div class="col-md-3">
+        <div class="col-md-2"><div id="circle3"></div></div>
+        <div class="col-md-10"><span style="color: #f08d49;"><small>近一个月内震级在5-6级之间的地震</small></span></div>
+    </div>
+    <div class="col-md-3">
+        <div class="col-md-2"><div id="circle5"></div></div>
+        <div class="col-md-10"><span style="color: #B12723;"><small>近一个月内震级在7-8级之间的地震</small></span></div>
+    </div>
+    <div class="col-md-3">
+        <div class="col-md-12" id="data_info"><strong>更新时间:&nbsp;<span id="update_time"></span>
+            <i class="fa fa-spinner fa-pulse"></i>&nbsp;&nbsp;(非实时)</strong><span>&nbsp;引自中国地震台网中心</span>
+        </div>
+    </div>
+</div>
+<!--地图-->
+<div class="row" style="background: #fff;">
+    <div class="col-md-12" id="allmap"></div>
+</div>
+<!--地震信息、经纬度-->
+<div class="row" style="background: #fff;border: 2px solid #0B304B;">
+    <div class="col-md-6 col-md-offset-1">
+        <span class="badge" style="background: #2B74CD">地震信息:</span><span style="border: 2px solid #DE8F5B;"id="info"></span>
+    </div>
+    <div class="col-md-4">
+        <span class="badge" style="background: #2B74CD">经度:</span>&nbsp;&nbsp;&nbsp;<span class="badge" id="lng"></span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="badge" style="background: #2B74CD">纬度:</span>&nbsp;&nbsp;&nbsp;<span class="badge" id="lat"></span>
+    </div>
+</div>
+
+<!--边界-->
+<div class="row" id="web_bottom"></div>
+
+<script>
+    $(function () {
+        $.ajax({
+            type: 'post',
+            url:"{:url('index/catalog')}",
+            dataType:'json',
+            success: function (data) {
+                // 初始化地图
+                initMap();
+                //清除地图上所有覆盖物
+                map.clearOverlays();
+                if (document.createElement('canvas').getContext) {  // 判断当前浏览器是否支持绘制海量点
+                    var years_pts = [];  // 添加海量点数据
+                    var points = [];
+                    var opts = [];
+                    var lastMonthDate = "";
+
+                    //获取数据最新时间
+                    $("#update_time").text(data[1].quake_time);
+                    //获取最新地震时间的前一个月时期
+                    lastMonthDate = deductDate(data[1].quake_time,1);
+
+                    for (var i=0;i<data.length;i++){
+                        if (new Date(data[i].quake_time).getTime() < new Date(lastMonthDate).getTime()){
+                            years_pts.push(new BMap.Point(data[i].longitude, data[i].latitude));
+                        }
+                    }
+                    var years_opt = {
+                        size: BMAP_POINT_SIZE_TINY,
+                        shape: BMAP_POINT_SHAPE_CIRCLE,
+                        color: '#d340c3'
+                    };
+                    var pointCollection_year = new BMap.PointCollection(years_pts,years_opt);//初始化PointCollection
+                    var pointCollection = new BMap.PointCollection(points,opts);
+                    map.addOverlay(pointCollection_year);
+                    //按照震级在地图上绘制近一个月的地震信息
+                    addpoints(data,lastMonthDate,0,4);
+                    addpoints(data,lastMonthDate,4,5);
+                    addpoints(data,lastMonthDate,5,6);
+                    addpoints(data,lastMonthDate,6,7);
+                    addpoints(data,lastMonthDate,7,8);
+                    addpoints(data,lastMonthDate,8,10);
+
+                } else {
+                    alert('请在chrome、safari、IE8+以上浏览器查看本示例');
+                }
+            }
+        });
+    });
+
+    //日期月份增减
+    function deductDate(date,months){
+        var d=new Date(date);
+        d.setMonth(d.getMonth()-months);
+        var m=d.getMonth()+1;
+        return d.getFullYear()+'-'+m+'-'+d.getDate()+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+    }
+
+    //定义添加海量点函数
+    function addpoints(data, lastDate, minmag, maxmag) {
+        /*
+        * data 传入的数据
+        * lastDate 最新地震目录时期的前一个月的时间
+        * minmag  最小震级
+        * maxmag  最大震级
+        */
+        //定义海量点数组
+        var points = [];
+        //定义提示信息数组
+        var content = [];
+        for (var i = 0; i < data.length; i++) {
+            if (new Date(data[i].quake_time).getTime() > new Date(lastDate).getTime()) {    //最近一个月内的地震信息
+                if ((data[i].magnitude > minmag) && (data[i].magnitude < maxmag)) {
+                    points.push(new BMap.Point(data[i].longitude, data[i].latitude));
+                    content.push("<span style='font-size:1px;font-weight: bold;'>"+"MAG" + " " + data[i].magnitude+ " " + data[i].depth + "m "+"  "+data[i].quake_time+"  "+data[i].location+"<span>");
+                }
+            }
+            //按震级大小分别绘制不同的样式点
+            if (maxmag == 4) {
+                var opts = {
+                    size: BMAP_POINT_SIZE_SMALLER,
+                    shape: BMAP_POINT_SHAPE_CIRCLE,
+                    color: '#FDF851'
+                }
+            }
+            if ((minmag == 4) && (maxmag == 5)) {
+                var opts = {
+                    size: BMAP_POINT_SIZE_SMALL,
+                    shape: BMAP_POINT_SHAPE_CIRCLE,
+                    color: '#FCDB4B'
+                }
+            }
+            if ((minmag == 5) && (maxmag == 6)) {
+                var opts = {
+                    size: BMAP_POINT_SIZE_NORMAL,
+                    shape: BMAP_POINT_SHAPE_CIRCLE,
+                    color: '#f08d49'
+                }
+            }
+            if ((minmag == 6) && (maxmag == 7)) {
+                var opts = {
+                    size: BMAP_POINT_SIZE_BIG,
+                    shape: BMAP_POINT_SHAPE_CIRCLE,
+                    color: '#E93732'
+                }
+            }
+            if ((minmag == 7) && (maxmag == 8)) {
+                var opts = {
+                    size: BMAP_POINT_SIZE_BIGGER,
+                    shape: BMAP_POINT_SHAPE_CIRCLE,
+                    color: '#B12723'
+                }
+            }
+            if (minmag == 8) {
+                var opts = {
+                    size: BMAP_POINT_SIZE_HUGE,
+                    shape: BMAP_POINT_SHAPE_CIRCLE,
+                    color: '#e93732'
+                }
+            }
+        }
+        var pointCollection = new BMap.PointCollection(points, opts);
+        map.addOverlay(pointCollection);
+        pointCollection.addEventListener('mouseover', function (e) {
+            for (var i=0;i<points.length;i++){
+                if (points[i].lng == e.point.lng && points[i].lat == e.point.lat ){
+                    //将地震信息传递给页面
+                    $("#info").html(content[i]);
+                }
+            }
+        });
+    }
+
+
+    /* 加载地图信息 */
+
+    //创建和初始化地图函数：
+    function initMap() {
+        createMap();
+        setMapEvent();
+        addMapControl();
+    }
+    //创建地图函数：
+    function createMap() {
+        var map = new BMap.Map("allmap");   //在百度地图容器中创建一个地图
+        var point = new BMap.Point(100.521733,34.816355);    //定义一个中心点坐标
+        map.centerAndZoom(point, 1);  //设定地图的中心点和坐标并将地图显示在地图容器中
+        map.setMapStyle({style:'midnight'});        //设置百度地图样式
+        map.addEventListener("mousemove",function(e){   //鼠标移动获取当前坐标
+            $("#lng").text(e.point.lng);
+            $("#lat").text(e.point.lat);
+        });
+        window.map = map;//将map变量存储在全局
+    }
+    //地图事件设置函数：
+    function setMapEvent()
+    {
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+    }
+    //地图控件添加函数：
+    function addMapControl()
+    {
+        //向地图中添加缩放控件
+        map.addControl(new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE}));
+        //向地图中添加缩略图控件
+        map.addControl(new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:1}));
+        //向地图中添加比例尺控件
+        map.addControl(new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT}));
+        //地图类型控件 默认右上角可切换地图/卫星/三维三种状态
+        map.addControl(new BMap.MapTypeControl({
+            mapTypes:[
+                BMAP_NORMAL_MAP,
+                BMAP_HYBRID_MAP,
+            ]
+        }));
+        map.setMapType( BMAP_NORMAL_MAP);  //设置默认地图类型
+    }
+    // 函数 创建多个标注
+    function markerFun (points,infoWindows) {
+        var markers = new BMap.Marker(points);
+        map.addOverlay(markers);
+        markers.addEventListener("click",function (event) {
+            map.openInfoWindow(infoWindows,points);//参数：窗口、点  根据点击的点出现对应的窗口
+        });
+    }
+    //清除覆盖物
+    function remove_overlay(){
+        map.clearOverlays();
+    }
+    //初始化地图
+    initMap();
+</script>
+
+{/block}

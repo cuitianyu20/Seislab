@@ -1,0 +1,417 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #download_header{background: #fff;border-bottom: 2px solid #cccccc;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #download_header h4{color: #23527C;}
+    #download_header hr{width: 70%;margin: 0px auto;color:#000;}
+    #allmap{min-width:60%;min-height:500px;margin-top: 10px;border:#ccc solid 2px;overflow: hidden;
+        padding:0;font-family:"微软雅黑";}
+    #map-btn{width: 40%;}
+    #download_info{margin-top: 40px;}
+    #download_info div{margin-top: 5px;}
+    #download_info div label{margin-top: 5px;}
+    #download_info div button{margin-top: 10px;}
+    #get_data{background: #fff;border-top: 2px solid #cccccc;border-bottom: 2px solid #cccccc;}
+    input::-webkit-input-placeholder {
+        font-size: 8px;
+        text-align: center;
+    }
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle!important;
+    }
+</style>
+<!--Data Download-->
+<div class="row" id="download_header">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：数据下载</strong></h6>
+        <hr>
+    </div>
+    <div class="col-md-6" id="allmap"></div>
+    <div class="col-md-4" id="map-btn">
+        <form class="form-horizontal" enctype="multipart/form-data" id="download_info">
+            <!--创建数据查询按钮-->
+            <div class="col-md-12">
+                <label  class="col-sm-4 control-label">Network:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="network" class="form-control" placeholder="台网">
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <label  class="col-sm-4 control-label">Station:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="station" class="form-control" placeholder="台站">
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <label  class="col-sm-4 control-label">Channel:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="channel" class="form-control" placeholder="通道">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label  class="col-sm-4 control-label">Location:</label><br>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-4 col-xs-offset-5" style="margin-top: 0px;">
+                    <input type="text" name="longitude_max" class="form-control" placeholder="最大经度">
+                </div>
+            </div>
+            <div class="col-md-12" style="margin-top: 0px;">
+                <div class="col-md-4 col-xs-offset-2" >
+                    <input type="text" name="latitude_min" class="form-control" placeholder="最小纬度">
+                </div>
+                <div class="col-md-4 col-xs-offset-2">
+                    <input type="text" name="latitude_max" class="form-control" placeholder="最大纬度">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-4 col-xs-offset-5" style="margin-top: 0px;">
+                    <input type="text" name="longitude_min" class="form-control" placeholder="最小经度">
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <label  class="col-sm-4 control-label">Start Time:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="starttime" class="form-control" placeholder="YYYY-MM-DD hh:mm:ss.SSS">
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <label  class="col-sm-4 control-label">End Time:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="endtime" class="form-control" placeholder="YYYY-MM-DD hh:mm:ss.SSS">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <button type="button" class="btn btn-primary col-lg-offset-5" id="search-btn">查询</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row" id="get_data">
+    <div class="col-md-12 table-responsive" style="margin-top: 5px;">
+    <!--显示查询数据表-->
+        <table class="table table-bordered table-striped table-hover table-condensed" id="data-table">
+            <caption class="h4 text-center">数据列表</caption>
+            <thead>
+            <tr class="success">
+                <th>序号</th><th>台网</th><th>台站</th><th>通道</th><th>经度</th><th>纬度</th><th>高程</th>
+                <th>开始记录时间</th><th>终止记录时间</th><th>下载量</th><th>数据下载</th>
+            </tr>
+            </thead>
+            <tbody id="data-list">
+            </tbody>
+        </table>
+    <!-- 翻页按钮栏-->
+        <div style="text-align: center;">
+            <button id="bt0" class="oaBtn">首页</button>
+            <button id="bt1" class="oaBtn">上一页</button>
+            <button id="bt2" class="oaBtn">下一页</button>
+            <button id="bt3" class="oaBtn">尾页</button>
+            当前第<span id="page" class="pageNum"></span>页
+            共<span id="pageSize" class="pageNum"></span>页
+            共<span id="total" class="pageNum"></span>条数据
+            到第<input type="text" id="number" style="width: 40px;padding: 0px;text-align: center;" />页
+            <button id="ensure" class="oaBtn">确定</button>
+            <span>5条/页</span>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var datalen=0;	// data数据总条数
+    var dataNum = 5; // 每页展示的数据条数
+    $(function () {
+        $('#search-btn').click(function () {
+            $.ajax({
+                type: 'get',
+                url: "{:url('index/search')}",
+                async:false,
+                cache:false,
+                data:$('#download_info').serialize(),
+                dataType:'json',
+                success: function (data) {
+                    // 初始化地图
+                    initMap();
+                    //删去地图上的覆盖物
+                    remove_overlay();
+                    //清空数据列表
+                    $("#data-list").empty();
+                    //判断数据是否为空
+                    if (data == ""){
+                        alert("非常抱歉，当前无可用数据！");
+                        remove_overlay();
+                    }else {
+                        switch (data.status) {
+                            case -3:
+                                alert(data.message);
+                                remove_overlay();
+                                window.location.back();
+                                break;
+                            case -2:
+                                alert(data.message);
+                                remove_overlay();
+                                window.location.back();
+                                break;
+                            case -1:
+                                alert(data.message);
+                                remove_overlay();
+                                window.location.back();
+                                break;
+                            case 1:
+                                alert(data.message);
+                                remove_overlay();
+                                window.location.back();
+                                break;
+                            case 2:
+                                alert(data.message);
+                                remove_overlay();
+                                break;
+                            default:
+                                //获取当前数据长度
+                                datalen=data.length;
+                                // 总条数
+                                $("#total").html(datalen);
+                                // 总页数  向上取整
+                                var pageSize = Math.ceil(datalen/dataNum);
+                                $("#pageSize").html(pageSize);
+                                // 当前第N页
+                                $("#page").html(1);
+                                //定义url数组
+                                var url = [];
+                                var id = [];
+                                //实现可视化与数据列表显示
+                                for (var i=0;i<datalen;i++){
+                                    var points = new BMap.Point(data[i].longitude,data[i].latitude);//创建坐标点
+                                    var opts = {
+                                        width:250,
+                                        height:100,
+                                        title:"<span style='color:red;'>序号</span>:"+i+"<span style='color:red;'>台网</span>:"+data[i].network,
+                                    };
+                                    //为标注添加信息窗口
+                                    var infoWindows = new BMap.InfoWindow(" <span style='color: #2aabd2;'>台站</span>:"+data[i].station+"<span style='color: #2aabd2;'>通道</span>:"+data[i].channel+
+                                        "<span style='color: #2aabd2;'>经纬度</span>:"+"("+data[i].longitude+","+data[i].latitude+")"+
+                                        "<span style='color: #2aabd2;'>海拔</span>:"+data[i].elevation+"<span style='color: #2aabd2;'>传感器名称</span>:"+data[i].sensor+"<span style='color: #2aabd2;'>传感器类型</span>:"
+                                        +data[i].sensor_type+"<span style='color: #2aabd2;'>DAS</span>:"+data[i].das,opts);
+                                    markerFun(points,infoWindows);
+
+                                    //数据列表显示
+                                    var tr=$('<tr style="display: none;"></tr>');
+                                    $('#data-list').append();
+                                    tr.append($('<td class="sort"></td>').text(i+1));
+                                    tr.append($('<td class="network"></td>').text(data[i].network));
+                                    tr.append($('<td class="station"></td>').text(data[i].station));
+                                    tr.append($('<td class="channel"></td>').text(data[i].channel));
+                                    tr.append($('<td class="longitude"></td>').text(data[i].longitude));
+                                    tr.append($('<td class="latitude"></td>').text(data[i].latitude));
+                                    tr.append($('<td class="elevation"></td>').text(data[i].elevation));
+                                    tr.append($('<td class="starttime"></td>').text(data[i].starttime));
+                                    tr.append($('<td class="endtime"></td>').text(data[i].endtime));
+                                    tr.append($('<td class="downtimes"></td>').text(data[i].downtimes));
+                                    tr.append("<td><button type='button' class='btn btn-success btn-xs'>" +
+                                        "<a href='' name='' class='dl' download=''>下载数据</a></button></td>");
+                                    $('#data-list').append(tr);
+
+                                    //将数据存储到url数组中
+                                    url.push( "__PUBLIC__/uploads/"+data[i].demo_data);
+                                    id.push(data[i].id);
+                                    //第一页显示设置
+                                    if (i < dataNum) {
+                                        $("#data-list tr").eq(i).show();
+                                    }else {
+                                        $("#data-list tr").eq(i).hide();
+                                    }
+                                }
+                                //将url数组数据依次赋值给a标签的href属性,实现下载功能
+                                for (var i=0;i<datalen;i++){
+                                    document.getElementsByClassName("dl")[i].href = url[i];
+                                    document.getElementsByClassName("dl")[i].name = id[i];
+                                }
+                                //实现更新数据下载量的功能
+                                $('.dl').click(function () {
+                                    var dataId = $(this).attr("name");
+                                    $.ajax({
+                                        type:'post',
+                                        url:"{:url('index/downtime')}",
+                                        data:{
+                                            data_id:dataId
+                                        },
+                                        dataType: 'json',
+                                        success:function () {
+                                        },
+                                    });
+                                });
+                        }
+                    }
+
+                },
+                error: function (jqXHR) {
+                    alert("发生错误："+jqXHR.status);
+                }
+            });
+        });
+    });
+
+    /* 设置数据翻页信息 */
+
+    /* 上一页 */
+    $("#bt1").click(function(){
+        var page = $("#page").html();
+        if (parseInt(page) > 1) {
+            // 先隐藏所有的行（数据）
+            $("#data-list tr").hide();
+            // 点击上一页时当前页数发生变化
+            $("#page").html(parseInt(page)-1);
+            var count = 0;
+            // 定位到上一页
+            var beforePage = parseInt(page)-1; // 假设是2
+            // 显示的数据则是上上一页的后一页，即：
+            var nextData = parseInt(beforePage-1)*dataNum;
+            for (var i02 = parseInt(nextData); i02 <= datalen; i02++) {
+                count += 1;
+                if (count <= dataNum) {
+                    $("#data-list tr").eq(i02).show();
+                }
+            }
+        }
+
+    });
+    /* 到第几页 */
+    $("#ensure").click(function () {
+        var page = $("#page").html();
+        var pageSize = $("#pageSize").html();
+        var a=document.getElementById("number").value;
+        if (a != ""){
+            if (a != parseInt(page) && a <= parseInt(pageSize)){
+                // 先隐藏所有的行（数据）
+                $("#data-list tr").hide();
+                // 点击确定时当前页数发生变化
+                $("#page").html(a);
+                var count = 0;
+                var beforePage = a-1;
+                // 显示的数据则是跳转页面上一页的后一页，即：
+                var nextData = parseInt(a-1)*dataNum;
+                for (var i02 = parseInt(nextData); i02 <= datalen; i02++) {
+                    count += 1;
+                    if (count <= dataNum) {
+                        $("#data-list tr").eq(i02).show();
+                    }
+                }
+            }
+        }
+    });
+    /* 下一页 */
+    $("#bt2").click(function(){
+        var page = $("#page").html();
+        var pageSize = $("#pageSize").html();
+        // 当前页码小于总页码时
+        if (parseInt(page) < parseInt(pageSize)) {
+            // 先隐藏所有的行（数据）
+            $("#data-list tr").hide();
+            // 点击下一页时当前页数发生变化
+            $("#page").html(parseInt(page)+1);
+            // 展示的数据也定位到下一页（nextData~datalen.length）
+            var nextData = parseInt(page)*dataNum;
+            var count = 0;
+            for (var i02 = parseInt(nextData); i02 <= datalen; i02++) {
+                count += 1;
+                if (count <= dataNum) {
+                    $("#data-list tr").eq(i02).show();
+                }
+            }
+        }
+
+        //$("#table1 tbody tr").eq(datalen+5).show();
+    });
+    /* 首页 */
+    $("#bt0").click(function(){
+        var page = $("#page").html();
+        var pageSize = $("#pageSize").html();
+        // 当前页码大1时
+        if (parseInt(page) > 1) {
+            // 先隐藏所有的行（数据）
+            $("#data-list tr").hide();
+            // 点击首页时当前页码定位到第一页
+            $("#page").html(1);
+            // 展示的数据也定位到第一页（1~dataNum条）
+            for (var i0 = 0; i0 < dataNum; i0++) {
+                $("#data-list tr").eq(i0).show();
+            }
+        }
+    });
+    /* 尾页 */
+    $("#bt3").click(function(){
+        var page = $("#page").html();
+        var pageSize = $("#pageSize").html();
+        if (parseInt(page) < parseInt(pageSize)) {
+            // 先隐藏所有的行（数据）
+            $("#data-list tr").hide();
+            // 点击尾页时页码变为最大码
+            $("#page").html(pageSize);
+            // 展示的数据也定位到最后一页
+            var nextData = parseInt(pageSize-1)*dataNum;
+            // 从倒数第二页的最后一条往后的数据展示出来
+            for (var i03 = parseInt(nextData); i03 <= datalen; i03++) {
+                $("#data-list tr").eq(i03).show();
+            }
+        }
+    });
+
+    /* 加载地图信息 */
+
+    //创建和初始化地图函数：
+    function initMap() {
+        createMap();
+        setMapEvent();
+        addMapControl();
+    }
+    //创建地图函数：
+    function createMap() {
+        var map = new BMap.Map("allmap");   //在百度地图容器中创建一个地图
+        var point = new BMap.Point(110.521733,34.816355);    //定义一个中心点坐标
+        map.centerAndZoom(point, 5);  //设定地图的中心点和坐标并将地图显示在地图容器中
+        window.map = map;//将map变量存储在全局
+    }
+    //地图事件设置函数：
+    function setMapEvent()
+    {
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+    }
+    //地图控件添加函数：
+    function addMapControl()
+    {
+        //向地图中添加缩放控件
+        map.addControl(new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE}));
+        //向地图中添加缩略图控件
+        map.addControl(new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:1}));
+        //向地图中添加比例尺控件
+        map.addControl(new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT}));
+        //地图类型控件 默认右上角可切换地图/卫星/三维三种状态
+        map.addControl(new BMap.MapTypeControl());
+    }
+    // 函数 创建多个标注
+    function markerFun (points,infoWindows) {
+        var markers = new BMap.Marker(points);
+        map.addOverlay(markers);
+        markers.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+        markers.addEventListener("click",function (event) {
+            map.openInfoWindow(infoWindows,points);//参数：窗口、点  根据点击的点出现对应的窗口
+        });
+    }
+    //清除覆盖物
+    function remove_overlay(){
+        map.clearOverlays();
+    }
+    //初始化地图
+    initMap();
+</script>
+{/block}

@@ -1,0 +1,76 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #userinfo_container{background: #fff;min-height: 670px;border-bottom: 2px solid #cccccc;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #info-title h5{color: #23527C;}
+    #operate a{color: #23527C;}
+    #operate a:hover{color: #FFD458;}
+</style>
+<div class="row" id="userinfo_container">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：个人中心->用户列表</strong></h6>
+        <hr>
+    </div>
+    <div>
+        <div class="col-md-6  col-md-offset-2 text-left" id="info-title">
+            <h5><strong>用户管理:</strong></h5>
+        </div>
+    </div>
+    <div class="col-md-12 table-responsive" style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-default text-center table-responsive">
+            <tr class="success">
+                <td>ID</td>
+                <td>用户名</td>
+                <td>邮箱</td>
+                <td>手机号</td>
+                <td>注册时间</td>
+                <td>身份</td>
+                <td>状态</td>
+                <td colspan="2">操作</td>
+            </tr>
+            {volist name="userList" id="user" empty="$empty"}
+            <tr id="operate">
+                <td>{$user.id}</td>
+                <td>{$user.user_name}</td>
+                <td>{$user.email}</td>
+                <td>{$user.mobile}</td>
+                <td>{$user.create_time}</td>
+                <td>
+                    {if $user.is_admin == 1} <font color="red">超级管理员</font>
+                    {else /}<font color="green">注册会员</font>
+                    {/if}
+                </td>
+                <td>
+                    {if $user.status == 0} <font color="red">禁用</font>
+                    {else /}<font color="green">正常</font>
+                    {/if}
+                </td>
+                <!--非当前用户不允许编辑其他用户资料-->
+                {eq name="$user.id" value="$Think.session.user_id"}
+                <td><a href="{:url('user/userEdit',['id'=>$user.id])}">编辑</a></td>
+                {/eq}
+                {neq name="$user.id" value="$Think.session.user_id"}
+                <td><a href="" onclick="dele();return false">删除</a></td>
+                {/neq}
+            </tr>
+            {/volist}
+        </table>
+    </div>
+
+    <!--添加分类操作-->
+    <div class="text-center">{$userList|raw}</div>
+</div>
+
+<script>
+    function dele() {
+        if (confirm('您确定要删除吗？') == true){
+            window.location.href="{:url('admin/doDelete',['id'=>$user.id])}";
+        }
+
+    }
+</script>
+
+{/block}

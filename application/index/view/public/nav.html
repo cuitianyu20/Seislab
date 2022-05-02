@@ -1,0 +1,93 @@
+<!--Navigation-->
+<div class="row" >
+    <div class="col-md-12" id="nav-style">
+        <nav class="navbar navbar-default" id="nav-whole" >
+            <div class="container-fluid">
+                <!--设置响应式导航-->
+                <div>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#nav-menu" aria-expanded="false" style="float: left;">
+                        <span class="sr-only">切换导航</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="clear"></div>
+                <!--导航目录-->
+                <div class="collapse navbar-collapse" id="nav-menu">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{:url('index/index')}"><span class="glyphicon glyphicon-home"></span>
+                            &nbsp;首&nbsp;页&nbsp;<span class="sr-only">(current)</span></a></li>
+                        <li><a href="{:url('index/info')}">中心简介</a></li>
+                        <li><a href="{:url('index/device')}">仪器设备</a></li>
+                        <li class="dropdown">
+                            <a href="{:url('index/news')}" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false">新闻动态</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{:url('index/news')}">通知公告</a></li>
+                                <li><a href="{:url('index/research')}">科研动态</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{:url('index/download')}">数据下载</a></li>
+                        <li class="dropdown">
+                            <a href="{:url('index/insert')}" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false">数据上传</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{:url('index/insert')}">单条上传</a></li>
+                                <li><a href="{:url('index/uploads')}">多条上传</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{:url('index/earthquake')}">地震信息</a></li>
+                        <li class="dropdown">
+                            <a href="{:url('user/userInfo')}" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false">个人中心</a>
+                            <ul class="dropdown-menu">
+                                {if $Think.session.user_level == 1}
+                                <li><a href="{:url('user/userInfo')}">个人资料</a></li>
+                                <li><a href="{:url('user/alter')}">修改密码</a></li>
+                                <li><a href="{:url('admin/publicInform')}">发布通知</a></li>
+                                <li><a href="{:url('admin/publicResearch')}">发布研究</a></li>
+                                <li><a href="{:url('admin/quakeInfo')}">更新地震</a></li>
+                                <li><a href="{:url('user/myUpload')}">我的上传</a></li>
+                                <li><a href="{:url('admin/userList')}">用户列表</a></li>
+                                <li><a href="{:url('admin/dataList')}">上传列表</a></li>
+                                <li><a href="{:url('admin/quakeList')}">地震目录</a></li>
+                                <li><a href="/project/public/admin.php">网站管理</a></li>
+                                {else /}
+                                <li><a href="{:url('user/userInfo')}">个人资料</a></li>
+                                <li><a href="{:url('user/alter')}">修改密码</a></li>
+                                <li><a href="{:url('user/myUpload')}">我的上传</a></li>
+                                {/if}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+</div>
+<script>
+    $(document).ready(function(){
+        $(document).off('click.bs.dropdown.data-api');
+    });
+
+    $(document).ready(function(){
+        dropdownOpen();//调用
+    });
+    /**
+     * 鼠标划过就展开子菜单，免得需要点击才能展开
+     */
+    function dropdownOpen() {
+
+        var $dropdownLi = $('li.dropdown');
+
+        $dropdownLi.mouseover(function() {
+            $(this).addClass('open');
+        }).mouseout(function() {
+            $(this).removeClass('open');
+        });
+    }
+</script>
+<div class="container">

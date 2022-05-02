@@ -1,0 +1,165 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #info_container{background: #fff;border-bottom: 2px solid #cccccc;min-height: 670px;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #info-title h5{color: #23527C;}
+    #register-info div i{color: red;}
+    #postal-select select{margin-top:6px;min-width: 120px;}
+</style>
+<!--User Register-->
+<div class="row" id="info_container">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：个人中心->用户注册</strong></h6>
+        <hr>
+    </div>
+    <div>
+        <div class="col-md-6  col-md-offset-2 text-left" id="info-title">
+            <h5><strong>用户注册:</strong></h5>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <form class="form-horizontal" enctype="multipart/form-data" id="register-info" >
+            <div class="form-group">
+                <label for="inputUserName" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>用户名:</label>
+                <div class="col-md-6">
+                    <input type="text" name="user_name" class="form-control" id="inputUserName">
+                </div>
+                <div class="col-md-3" style="margin-top: 7px;">
+                    <span><i class="fa fa-exclamation-circle"></i>&nbsp;<small>用户名必须是汉字、字母和数字</small></span>
+                </div>
+            </div>
+
+            <div class="form-group" >
+                <label for="inputActualName" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>真实姓名:</label>
+                <div class="col-md-6">
+                    <input type="text" name="actual_name" class="form-control" id="inputActualName">
+                </div>
+                <div class="col-md-3" style="margin-top: 7px;">
+                    <span><i class="fa fa-exclamation-circle"></i>&nbsp;<small>姓名长度为2-20位之间</small></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputOccupation" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>职业:</label>
+                <div class="col-md-6">
+                    <select name="occupation" class="form-control" id="inputOccupation">
+                        <option value="科研人员" selected>科研人员</option>
+                        <option value="企业员工">企业员工</option>
+                        <option value="高校学生">高校学生</option>
+                        <option value="政务人员">政务人员</option>
+                        <option value="普通群众">普通群众</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputEmail" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>邮箱:</label>
+                <div class="col-md-6">
+                    <input type="text" name="email" class="form-control" id="inputEmail">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputMobile" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>手机号:</label>
+                <div class="col-md-6">
+                    <input type="text" name="mobile" class="form-control" id="inputMobile">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputPassword" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>密码:</label>
+                <div class="col-md-6">
+                    <input type="password" name="password" class="form-control" id="inputPassword">
+                </div>
+                <div class="col-md-3" style="margin-top: -4px;">
+                    <span><i class="fa fa-exclamation-circle"></i>&nbsp;<small>密码长度在6-20位之间，且必须是数字和字母</small></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputConfirmPassword" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>确认密码:</label>
+                <div class="col-md-6">
+                    <input type="password" name="password_confirm" class="form-control" id="inputConfirmPassword">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>通讯地址:</label>
+                <div class="col-md-6">
+                    <div id="postal-select" >
+                        <!--省份选择-->
+                        <select name="province" id="province">
+                            <option>请选择</option>
+                        </select>
+                        <!--城市选择-->
+                        <select name="city" id="city">
+                            <option>请选择</option>
+                        </select>
+                        <!--县区选择-->
+                        <select name="town" id="town">
+                            <option>请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputDetailAddress" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>详细地址:</label>
+                <div class="col-md-6">
+                    <input type="text" name="detail_address" class="form-control" id="inputDetailAddress">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-8">
+                    <button type="button" class="btn btn-primary" id="register">注册</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#register').on('click',function(){
+            //用ajax提交用户信息
+            $.ajax({
+                type: 'post',
+                url: "{:url('user/insert')}",
+                data: $('#register-info').serialize(),
+                dataType: 'json',
+                success: function(data){
+                    switch (data.status)
+                    {
+                        case 1:
+                            alert(data.message);
+                            window.location.href = "{:url('index/index')}";
+                            break;
+                        case 0:
+                            alert(data.message);
+                            window.location.back();
+                            break;
+                        case -1:
+                            alert(data.message);
+                            window.location.back();
+                            break;
+                    }
+                }
+            })
+        })
+    })
+</script>
+{/block}

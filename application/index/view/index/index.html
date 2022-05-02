@@ -1,0 +1,93 @@
+{extend name='public/base' /}
+{block name="content"}
+        <!--Site Content-->
+        <div class="row">
+            <div class="col-md-12" id="content-top">
+                <div class="col-md-12 text-center">
+                    <img class="img-responsive center-block" src="__STATIC__/img/institute.jpeg" alt="research institute">
+                </div>
+            </div>
+        </div>
+
+        <!--Latest Notification-->
+        <div class="row" id="content-center">
+            <div class="col-md-10 col-md-offset-1 text-left">
+                <div id="content-inform">
+                    <span id="new-info" >最新通知&nbsp;<i class="fa fa-volume-up"></i></span>
+                    <span class="badge" id="more-info"><a href="{:url('index/news')}">更多</a></span>
+                </div>
+                <div id="content-inform-menu">
+                    <ul>
+                        {volist name="informList" id="inform"}
+                        <li>
+                            <a href="{:url('admin/detail',['id'=>$inform.id])}"><i class="fa fa-volume-down">&nbsp;&nbsp;{$inform.title|getDetContent}</i></a>
+                            <span class="badge">{$inform.create_time}</span>
+                        </li>
+                        {/volist}
+                    </ul>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+
+        <!--Research News-->
+        <div class="row" id="research">
+            <div class="col-md-12">
+                <div class="col-md-10 col-md-offset-1" id="research-news-header">
+                    <a href="{:url('index/research')}">科研动态&nbsp;<i class="fa fa-flask"></i></a>
+                </div>
+                <div class="col-md-12" id="research-news">
+                    {volist name="researchList" id="research"}
+                    <div class="col-md-4">
+                        <a href="{:url('admin/researchDetail',['id'=>$research.id])}"><img class="img-responsive" src="__PUBLIC__/images/{$research.images}" alt="research news photo"></a>
+                        <p class="lead text-justify"><a href="{:url('admin/researchDetail',['id'=>$research.id])}">{$research.title|getDetContent}</a></p>
+                    </div>
+                    {/volist}
+                </div>
+            </div>
+        </div>
+
+        <!--Data Service-->
+        <div class="row" id="fast-link">
+            <div class="col-md-12">快速链接&nbsp;<i class="fa fa-link"></i></div>
+        </div>
+        <div class="row" id="data-service">
+            <div class="col-md-4">
+                <a href="{:url('index/earthquake')}">地震目录&nbsp;<i class="fa fa-database"></i></a>
+            </div>
+            <div class="col-md-4">
+                <a href="{:url('index/download')}">数据下载&nbsp;<i class="fa fa-download"></i></a>
+            </div>
+            <div class="col-md-4">
+                <a href="{:url('index/insert')}">数据上传&nbsp;<i class="fa fa-upload"></i></a>
+            </div>
+        </div>
+
+        <div class="row" id="data-web">
+            <div class="col-md-2">
+                <span class="text-nowrap"><strong>国内外地震数据网站：</strong></span>
+            </div>
+            <div class="col-md-3">
+                <a href="https://www.iris.edu/hq/" target="_blank" >美国地震学研究联合会(IRIS)</a>
+            </div>
+            <div class="col-md-4">
+                <a class="text-nowrap" href="http://www.fdsn.org/" target="_blank">美国数字宽频带地震台网联合会(fdsn)</a>
+            </div>
+            <div class="col-md-3">
+                <a href="http://data.earthquake.cn/" target="_blank">中国国家地震科学数据中心</a>
+            </div>
+            <br><br>
+            <div class="col-md-3">
+                <a href="http://www.eri.u-tokyo.ac.jp/" target="_blank" >日本东京大学地震学研究所(ERI)</a>
+            </div>
+            <div class="col-md-3">
+                <a href="http://www.orfeus-eu.org/" target="_blank" >欧洲地震观测与研究实验室(orfeus)</a>
+            </div>
+            <div class="col-md-3">
+                <a href="https://earthquake.usgs.gov/" target="_blank">美国地质调查局(USGS)</a>
+            </div>
+            <div class="col-md-3">
+                <a href="https://www.iris.edu/hq/programs/gsn" target="_blank">全球地震台网(GSN)</a>
+            </div>
+        </div>
+{/block}

@@ -1,0 +1,41 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #news-container{background: #fff;min-height: 700px;border-bottom: 2px solid #cccccc;}
+    #news-info h5{color: #23527C;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #inform-info{color: #23527C;}
+    #inform-info a{color:#23527C;font-weight: bold; }
+    #inform-info hr{width: 100%;color:#000;}
+    #attachment p{color:#23527C;margin-left: 15%;}
+    #attachment p a{color:#23527C;text-decoration: none;}
+    #attachment p a:hover{color:#FCDC4B; }
+</style>
+<!--news-->
+<div class="row" id="news-container">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：新闻动态->科研动态</strong></h6>
+        <hr>
+    </div>
+    <div class="col-md-10  col-md-offset-1 text-center" id="news-info">
+        <h5><strong>{$research.title}</strong></h5>
+    </div>
+    <div class="col-md-10 col-md-offset-1 text-center" id="inform-info">
+        <p>
+            <small>
+                作者:&nbsp;&nbsp;管理员&nbsp;&nbsp;|&nbsp;&nbsp;
+                发布时间:&nbsp;&nbsp;{$research.create_time}&nbsp;&nbsp;|&nbsp;&nbsp;
+                阅读量:&nbsp;&nbsp;{$research.pv}&nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href="{:url('index/research')}">【关闭】</a>
+            </small>
+        </p>
+        <hr>
+    </div>
+    <div class="col-md-10 col-md-offset-1 text-center">
+        {$research.content|raw}
+    </div>
+</div>
+
+{/block}

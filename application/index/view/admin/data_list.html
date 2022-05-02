@@ -1,0 +1,263 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #info_container{background: #fff;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #info-title h5{color: #23527C;}
+    #alter-mainer{background: #fff;min-height: 450px;border-bottom: 2px solid #cccccc;}
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle!important;
+    }
+</style>
+<!--User Register-->
+<div class="row" id="info_container">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：个人中心->查看上传</strong></h6>
+        <hr>
+    </div>
+    <div>
+        <div class="col-md-6  col-md-offset-2 text-left" id="info-title">
+            <h5><strong>上传数据列表:</strong></h5>
+        </div>
+    </div>
+</div>
+<div class="row" id="alter-mainer">
+    <div class="col-md-12 table-responsive" style="margin-top: 5px;">
+        <input type="hidden" name="user_id" id="user_id" value="{$Think.session.user_id}">
+
+        <table class="table text-center table-bordered table-striped table-hover table-condensed" id="data-table">
+            <caption class="h4 text-center">数据列表</caption>
+            <thead>
+            <tr class="success">
+                <th>序号</th><th>台网</th><th>台站</th><th>通道</th><th>经度</th><th>纬度</th><th>高程</th>
+                <th>开始记录时间</th><th>终止记录时间</th><th>审核状态</th><th>下载数据</th><th>修改审核</th>
+            </tr>
+            </thead>
+            <tbody id="data-list">
+            </tbody>
+        </table>
+        <!-- 翻页按钮栏-->
+        <div style="text-align: center;">
+            <button id="bt0" class="oaBtn">首页</button>
+            <button id="bt1" class="oaBtn">上一页</button>
+            <button id="bt2" class="oaBtn">下一页</button>
+            <button id="bt3" class="oaBtn">尾页</button>
+            当前第<span id="page" class="pageNum"></span>页
+            共<span id="pageSize" class="pageNum"></span>页
+            共<span id="total" class="pageNum"></span>条数据
+            到第<input type="text" id="number" style="width: 40px;padding: 0px;text-align: center;" />页
+            <button id="ensure" class="oaBtn">确定</button>
+            <span>10条/页</span>
+        </div>
+    </div>
+</div>
+<script>
+    var datalen=0;	// data数据总条数
+    var dataNum = 10; // 每页展示的数据条数
+    $(function () {
+        var user_id = $("#user_id").val();
+        $.ajax({
+            type:'post',
+            url: "{:url('admin/search_list')}",
+            data:{'id':user_id},
+            dataType: 'json',
+            success: function (data) {
+                //清空数据列表
+                $("#data-list").empty();
+                if (data.status==0){
+                    alert(data.message);
+                }else {
+                    //获取当前数据长度
+                    datalen=data.length;
+                    // 总条数
+                    $("#total").html(datalen);
+                    // 总页数  向上取整
+                    var pageSize = Math.ceil(datalen/dataNum);
+                    $("#pageSize").html(pageSize);
+                    // 当前第N页
+                    $("#page").html(1);
+                    //定义url数组
+                    var url = [];
+                    var id = [];
+                    for (var i=0;i<datalen;i++){
+                        if (data[i].status == 0){
+                            data[i].status = "<font color='red'>审核中...</font>";
+                        }else {
+                            data[i].status = "<font color='green'>审核通过</font>";
+                        }
+                        //数据列表显示
+                        var tr=$('<tr style="display: none;"></trd>');
+                        tr.append($('<td class="sort"></td>').text(i+1));
+                        tr.append($('<td class="network"></td>').text(data[i].network));
+                        tr.append($('<td class="station"></td>').text(data[i].station));
+                        tr.append($('<td class="channel"></td>').text(data[i].channel));
+                        tr.append($('<td class="longitude"></td>').text(data[i].longitude));
+                        tr.append($('<td class="latitude"></td>').text(data[i].latitude));
+                        tr.append($('<td class="elevation"></td>').text(data[i].elevation));
+                        tr.append($('<td class="starttime"></td>').text(data[i].starttime));
+                        tr.append($('<td class="endtime"></td>').text(data[i].endtime));
+                        tr.append($('<td class="status"></td>').html(data[i].status));
+                        tr.append("<td><a href='' name='' class='dl' download=''><button type='button' class='btn btn-success btn-xs'>" +
+                            "下载数据</button></a></td>");
+                        tr.append("<td><a href='' name='' class='pass'><button type='button' class='btn btn-success btn-xs'>通过</button></a></td>");
+                        $('#data-list').append(tr);
+
+                        //将数据存储到url数组中
+                        url.push( "__PUBLIC__/uploads/"+data[i].demo_data);
+                        id.push(data[i].id);
+                        //第一页显示设置
+                        if (i < dataNum) {
+                            $("#data-list tr").eq(i).show();
+                        }else {
+                            $("#data-list tr").eq(i).hide();
+                        }
+                    }
+                    //将url数组数据依次赋值给a标签的href属性,实现下载功能
+                    for (var i=0;i<datalen;i++){
+                        document.getElementsByClassName("dl")[i].href = url[i];
+                        document.getElementsByClassName("dl")[i].name = id[i];
+                    }
+                    //将id数组数据依次赋值给a标签的href属性,实现下载功能
+                    for (var i=0;i<datalen;i++){
+                        document.getElementsByClassName("pass")[i].name = id[i];
+                    }
+
+                    //审核通过设置
+                    $(".pass").on('click',function () {
+                        var dataId = $(this).attr("name");
+                        $.ajax({
+                            type: 'post',
+                            url:"{:url('admin/pass')}",
+                            data:{data_id:dataId},
+                            dataType: 'json',
+                            success:function (data) {
+                                console.log(data);
+                                if (data.status == 0){  //审核通过
+                                    alert(data.message);
+                                }else {     //审核没通过
+                                    alert(data.message);
+                                }
+                            },
+                        });
+                    });
+
+                }
+            },
+            error: function (jqXHR) {
+                alert("发生错误："+jqXHR.status);
+            }
+        });
+    });
+
+    /* 设置数据翻页信息 */
+
+    /* 上一页 */
+    $("#bt1").click(function(){
+        var page = $("#page").html();
+        if (parseInt(page) > 1) {
+            // 先隐藏所有的行（数据）
+            $("#data-list tr").hide();
+            // 点击上一页时当前页数发生变化
+            $("#page").html(parseInt(page)-1);
+            var count = 0;
+            // 定位到上一页
+            var beforePage = parseInt(page)-1; // 假设是2
+            // 显示的数据则是上上一页的后一页，即：
+            var nextData = parseInt(beforePage-1)*dataNum;
+            for (var i02 = parseInt(nextData); i02 <= datalen; i02++) {
+                count += 1;
+                if (count <= dataNum) {
+                    $("#data-list tr").eq(i02).show();
+                }
+            }
+        }
+
+    });
+    /* 到第几页 */
+    $("#ensure").click(function () {
+        var page = $("#page").html();
+        var pageSize = $("#pageSize").html();
+        var a=document.getElementById("number").value;
+        if (a != ""){
+            if (a != parseInt(page) && a <= parseInt(pageSize)){
+                // 先隐藏所有的行（数据）
+                $("#data-list tr").hide();
+                // 点击确定时当前页数发生变化
+                $("#page").html(a);
+                var count = 0;
+                var beforePage = a-1;
+                // 显示的数据则是跳转页面上一页的后一页，即：
+                var nextData = parseInt(a-1)*dataNum;
+                for (var i02 = parseInt(nextData); i02 <= datalen; i02++) {
+                    count += 1;
+                    if (count <= dataNum) {
+                        $("#data-list tr").eq(i02).show();
+                    }
+                }
+            }
+        }
+    });
+    /* 下一页 */
+    $("#bt2").click(function(){
+        var page = $("#page").html();
+        var pageSize = $("#pageSize").html();
+        // 当前页码小于总页码时
+        if (parseInt(page) < parseInt(pageSize)) {
+            // 先隐藏所有的行（数据）
+            $("#data-list tr").hide();
+            // 点击下一页时当前页数发生变化
+            $("#page").html(parseInt(page)+1);
+            // 展示的数据也定位到下一页（nextData~datalen.length）
+            var nextData = parseInt(page)*dataNum;
+            var count = 0;
+            for (var i02 = parseInt(nextData); i02 <= datalen; i02++) {
+                count += 1;
+                if (count <= dataNum) {
+                    $("#data-list tr").eq(i02).show();
+                }
+            }
+        }
+
+        //$("#table1 tbody tr").eq(datalen+5).show();
+    });
+    /* 首页 */
+    $("#bt0").click(function(){
+        var page = $("#page").html();
+        var pageSize = $("#pageSize").html();
+        // 当前页码大1时
+        if (parseInt(page) > 1) {
+            // 先隐藏所有的行（数据）
+            $("#data-list tr").hide();
+            // 点击首页时当前页码定位到第一页
+            $("#page").html(1);
+            // 展示的数据也定位到第一页（1~dataNum条）
+            for (var i0 = 0; i0 < dataNum; i0++) {
+                $("#data-list tr").eq(i0).show();
+            }
+        }
+    });
+    /* 尾页 */
+    $("#bt3").click(function(){
+        var page = $("#page").html();
+        var pageSize = $("#pageSize").html();
+        if (parseInt(page) < parseInt(pageSize)) {
+            // 先隐藏所有的行（数据）
+            $("#data-list tr").hide();
+            // 点击尾页时页码变为最大码
+            $("#page").html(pageSize);
+            // 展示的数据也定位到最后一页
+            var nextData = parseInt(pageSize-1)*dataNum;
+            // 从倒数第二页的最后一条往后的数据展示出来
+            for (var i03 = parseInt(nextData); i03 <= datalen; i03++) {
+                $("#data-list tr").eq(i03).show();
+            }
+        }
+    });
+</script>
+
+
+
+{/block}

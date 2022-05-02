@@ -1,0 +1,133 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #info_container{background: #fff;min-height: 670px;border-bottom: 2px solid #cccccc;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #info-title h5{color: #23527C;}
+    #info-edit a{color: #23527C;}
+    #register-info div i{color: red;}
+    #postal-select select{margin-top:6px;width: 120px;}
+    #login-header h4{margin-top: 20px;color: #23527C;}
+
+</style>
+<div class="row" id="info_container">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：个人中心->修改资料</strong></h6>
+        <hr>
+    </div>
+    <div>
+        <div class="col-md-6  col-md-offset-2 text-left" id="info-title">
+            <h5><strong>个人资料:</strong></h5>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <form class="form-horizontal" enctype="multipart/form-data" action="{:url('user/doEdit')}" method="post" id="register-info">
+            <div class="form-group">
+                <label for="inputUserName" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>用户名:</label>
+                <div class="col-md-6">
+                    <input type="text" name="user_name" class="form-control" id="inputUserName" value="{$userEdit.user_name}">
+                </div>
+                <div class="col-md-3" style="margin-top: 7px;">
+                    <span><i class="fa fa-exclamation-circle"></i>&nbsp;<small>用户名必须是汉字、字母和数字</small></span>
+                </div>
+            </div>
+
+            <div class="form-group" >
+                <label for="inputActualName" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>真实姓名:</label>
+                <div class="col-md-6">
+                    <input type="text" name="actual_name" class="form-control" id="inputActualName" value="{$userEdit.actual_name}">
+                </div>
+                <div class="col-md-3" style="margin-top: 7px;">
+                    <span><i class="fa fa-exclamation-circle"></i>&nbsp;<small>姓名长度为2-20位之间</small></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputOccupation" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>职业:</label>
+                <input type="hidden" id="occupation_info" value="{$userEdit.occupation}">
+                <div class="col-md-6">
+                    <select name="occupation" class="form-control" id="inputOccupation">
+                        <option value="企业员工">企业员工</option>
+                        <option value="高校学生">高校学生</option>
+                        <option value="科研人员">科研人员</option>
+                        <option value="政务人员">政务人员</option>
+                        <option value="普通群众">普通群众</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputEmail" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>邮箱:</label>
+                <div class="col-md-6">
+                    <input type="text" name="email" class="form-control" id="inputEmail" value="{$userEdit.email}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputMobile" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>手机号:</label>
+                <div class="col-md-6">
+                    <input type="text" name="mobile" class="form-control" id="inputMobile" value="{$userEdit.mobile}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>通讯地址:</label>
+                <div class="col-md-6">
+                    <div id="postal-select" >
+                        <!--省份选择-->
+                        <select name="province" id="province">
+                            <option value="{$userEdit.province}">{$userEdit.province}</option>
+                        </select>
+                        <!--城市选择-->
+                        <select name="city" id="city">
+                            <option>{$userEdit.city}</option>
+                        </select>
+                        <!--县区选择-->
+                        <select name="town" id="town">
+                            <option>{$userEdit.town}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputDetailAddress" class="col-md-2 col-md-offset-1 control-label">
+                    <span><i class="fa fa-asterisk"></i></span>详细地址:</label>
+                <div class="col-md-6">
+                    <input type="text" name="detail_address" class="form-control" id="inputDetailAddress" value="{$userEdit.detail_address}">
+                </div>
+            </div>
+
+            <!--将当前用户的id作为隐藏域数据-->
+            <input type="hidden" name="id" value="{$userEdit.id}">
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-2">
+                    <button type="submit" class="btn btn-info" id="save">保存</button>
+                </div>
+                <div class="col-md-2">
+                    <a href="{:url('user/userInfo')}"><button type="button" class="btn btn-danger" id="cancel">取消</button></a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    //将用户职业信息显示在select中
+    var info = document.getElementById('occupation_info').value;
+    $("#inputOccupation option").each(function() {
+        if($(this).val() == info){
+            $(this).prop('selected',true);
+        }
+    });
+</script>
+
+{/block}

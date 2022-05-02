@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$title|default="页面标题"}</title>
+    <!--    加载bootstrap、jQuery、font-awesome和自定义CSS等文件-->
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/igg.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/oaBtn.css">
+    <script src="__STATIC__/js/jquery-3.4.1.min.js"></script>
+    <script src="__STATIC__/js/bootstrap.min.js"></script>
+    <!--引入js-xlsx-->
+    <script src="__STATIC__/js/xlsx.full.min.js"></script>
+    <!-- 百度富文本编辑器配置文件 -->
+    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.min.js"></script>
+    <!--    引入百度地图API-->
+    <script type="text/javascript" src="//api.map.baidu.com/getscript?v=2.0&ak=OOaAVwlGxaM53yEcTVURRTBSZBW5QK1f"></script>
+    <link rel="stylesheet" href="__STATIC__/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" type="image/x-icon" href="__STATIC__/img/logo.jpg">
+</head>
+<body>
+<div id="web-bg">
+    <div class="container">
+        <!--Site Header-->
+        <div class="row" id="header-top">
+            <div class="col-md-12 text-right text-nowrap"><a href="http://www.igg.cas.cn/" target="_blank" ><small>中国科学院地质与地球物理研究所</small></a>
+                &nbsp;|&nbsp;<a href="mailto:tycuicn@163.com" target="_blank">
+                <span class="glyphicon glyphicon-send"></span>&nbsp;<small>联系我们</small></a>
+            </div>
+            {if $Think.session.user_id}
+            <div class="col-md-12 text-center">
+                <div style="float: right">
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="{:url('user/logout')}"><small>退出登录</small></a>
+                </div>
+                <div style="float: right;">
+                    <a href="#">{$Think.session.user_name}</a>
+                </div>
+                <div class="clear"></div>
+            </div>
+            {else /}
+            <div class="col-md-12 text-right text-nowrap">
+                <a href="{:url('user/login')}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;
+                    <small>用户登录</small></a>&nbsp;|&nbsp;<a href="{:url('user/register')}"><small>注册</small></a>
+            </div>
+            {/if}
+
+            <div class="col-md-2">
+                <a href="{:url('index/index')}"><img class="img-responsive" id="header-logo" src="__STATIC__/img/footlogo.png" alt="igg"></a>
+            </div>
+            <div class="col-md-7">
+                <div id="header-info"><p>地震台阵探测实验室中心数据管理中心</p>
+                    <p>Data Management Center of Seismic Array Detection Laboratory Center</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-right" id="header-search">
+                    <div class="form-group">
+                        <form action="{:url('index/seek')}" method="get">
+                            <input type="text" name="keywords"  id="seek_content" placeholder="请输入关键字">
+                            <button type="submit" ><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+

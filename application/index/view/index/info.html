@@ -1,0 +1,72 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #dmc-container{background: #fff;border-bottom: 2px solid #cccccc;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #lab-info h5{color: #23527C;}
+    #lab-more{word-break:break-all; word-wrap:break-word;}
+    #dmc-info h5{color:#23527C;}
+    #dmc-more{word-break:break-all; word-wrap:break-word;}
+    #data-distribution{min-width: 50%;min-height: 50%;margin:0px auto;}
+</style>
+<!--DMC-->
+<div class="row" id="dmc-container">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：数据中心</strong></h6>
+        <hr>
+    </div>
+    <div>
+        <div class="col-md-8  col-md-offset-2 text-left" id="lab-info">
+            <h5><strong>实验室简介:</strong></h5>
+        </div>
+    </div>
+    <div>
+<!--中心简介-->
+        <div class="col-md-8  col-md-offset-2 text-left" id="lab-more">
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;2000年，地震台阵探测实验室是在中国科学院知识创新工程中建设的大型地震野外观测平台。该观测平台的基本功能是：
+                记录天然地震、人工地震和环境噪声源的地面运动时程，进行数据处理和管理，为研究中国大陆及境外典型构造区地壳-上地幔结构、
+                地球深部结构及动力学过程，而开展的流动地震观测提供仪器和技术支撑，以及数据管理与共享。</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;目前，实验室拥有在编人员3人，包括高级工程师1人、工程师1人和实验师1人。实验室在用的地震仪主要包括488套进口宽频带地震仪，
+                440套短周期地震仪。自成立以来，实验室通过执行多项由国家自然科学基金、国家重点研发计划和中科院先导B等项目资助的野外观测任务，支持观测的宽频带地震台
+                站已达1900多个。据不完全统计，近五年（2014年以来）支持观测的宽频带台站为534个，已获得原始数据约3.6T，另外还有167个台站正在观测执行期中。实验室具
+                有完备的技术力量和手段，对国内外主流地震仪设备都能够进行仪器维护，包括美国72A、130、Q330，加拿大Taurus、Trillium 120PA，以及英国CMG 3ESP、CMG 3T等。
+                同时，实验室完成了新一代DAS24-CAS采集器、稳压电源，以及与进口REFTEK-130采集器同等功能的GPS接收机等设备的研制及试验，并成功应用于实际野外观测。在数据共
+                享方面，实验室部分数据已实现国际共享。</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;《地震台阵探测实验室》的发展目标是建立一个开放的地震仪器使用、维护与维修基地，地震数据的管理与共享中心。实验室人员将竭尽全力为国内外的科研人员服务！</p>
+            <p style="margin-left: 20px;"><strong>实验室主任： 艾印双</strong></p>
+            <p style="margin-left: 20px;"><strong>办公室： 地1楼803房间</strong></p>
+            <p style="margin-left: 20px;"><strong>联系电话：010-82998356</strong></p>
+            <p style="margin-left: 20px;"><strong>电子邮箱：ysai@mail.iggcas.ac.cn</strong></p>
+            <p style="margin-left: 20px;"><strong>实验室地点：地6楼东配楼1层、2层；地2楼505　</strong></p>
+            <p style="margin-left: 20px;"><strong>联系地址：100029 北京市朝阳区北土城西路19号 中国科学院地质与地球物理研究所</strong></p>
+            <hr>
+        </div>
+    </div>
+    <div>
+        <div class="col-md-8  col-md-offset-2 text-left" id="dmc-info">
+            <h5><strong>数据中心简介:</strong></h5>
+        </div>
+    </div>
+    <div>
+        <!--中心简介-->
+        <div class="col-md-8  col-md-offset-2 text-left" id="dmc-more">
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;经过几年的发展，台阵探测实验室已建立起初具规模的数据中心。经过近五年来执行国家项目的野外观测，数据中心现已收集整理了国内近三百观测点的地震资料。
+                原始数据总量达3003GB，其中记录天然地震数据2973GB，人工地震记录数据30GB。实验室备有专门的数据存储间，对收集整理的观测数据及事件数据进行磁带、光盘的双重备份、保存工作。
+                数据中心现有两套具有大容量磁盘阵列的SUN工作站处理系统，可以对实验室不同型号仪器采集的野外观测数据进行标准化处理。在满足使用实验室仪器用户数据处理要求的同时，
+                实验室可以承接其它用户的天然地震数据服务工作。</p>
+            <p><strong>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-hand-o-right"></i>&nbsp;&nbsp;数据处理系统：</strong></p>
+            <p style="margin-left: 50px;"><i class="fa fa-spinner fa-pulse"></i>&nbsp;&nbsp;SunUltra60工作站</p>
+            <p style="margin-left: 50px;"><i class="fa fa-spinner fa-pulse"></i>&nbsp;&nbsp;LEC磁盘阵列（440GB/SCSI接口）</p>
+            <p style="margin-left: 50px;"><i class="fa fa-spinner fa-pulse"></i>&nbsp;&nbsp;SUNfire 880服务器</p>
+            <p style="margin-left: 50px;"><i class="fa fa-spinner fa-pulse"></i>&nbsp;&nbsp;SUN StorEdge T3(660GB光纤磁盘针列)</p>
+            <p style="margin-left: 50px;"><i class="fa fa-spinner fa-pulse"></i>&nbsp;&nbsp;浪潮的NS3500（1.7TB磁盘阵列）</p>
+            <p><strong>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-hand-o-right"></i>&nbsp;&nbsp;现有数据：</strong></p>
+            <img src="__STATIC__/img/data-distribution.jpg" id="data-distribution" class="img-responsive" alt="data-distribution">
+        </div>
+    </div>
+</div>
+
+
+{/block}

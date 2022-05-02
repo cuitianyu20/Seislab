@@ -1,0 +1,204 @@
+{extend name='public/base' /}
+{block name="content"}
+<style>
+    #dmc-container{background: #fff;border-bottom: 2px solid #cccccc;}
+    #info-header{margin-top: 10px;margin-bottom: 10px;}
+    #info-header h6{color: #23527C;}
+    #info-header hr{width: 100%;margin: 0px auto;color:#000;}
+    #lab-info h5{color: #23527C;}
+    #lab-more{word-break:break-all; word-wrap:break-word;}
+    #dmc-info h5{color:#23527C;}
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle!important;
+    }
+</style>
+<!--DMC-->
+<div class="row" id="dmc-container">
+    <div class="col-md-10 col-md-offset-1 text-left" id="info-header">
+        <h6><strong>您现在的位置：仪器设备</strong></h6>
+        <hr>
+    </div>
+    <div class="col-md-8  col-md-offset-2 text-left" id="lab-info">
+        <h5><strong>现有仪器简介:</strong></h5>
+    </div>
+    <!--中心简介-->
+    <div class="col-md-8  col-md-offset-2 text-left" id="lab-more">
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;中国科学院地质与地球物理研究所地震台阵探测实验室是我所知识创新工程支持建立的重要地球物理观测系统。
+            通过近几年的引进和自行研制，地震台阵探测实验室目前装备有工作状态良好的488套宽频带、440套短周期地震仪(如下表所示)。为使地震
+            台阵探测实验室管理按科学机制运行，特制定本办法。</p>
+<!--            现有仪器统计表-->
+        <div class="col-md-12 table-responsive" style="margin-top: 5px;">
+            <table class="table table-bordered table-condensed table-hover table-responsive">
+                <thead >
+                <tr class="info">
+                    <th>类别</th><th>地震计</th><th>产地</th><th>频带</th>
+                    <th>数目</th><th>采集器</th><th>产地</th><th>数目</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td rowspan="8" style="vertical-align: middle;">宽频带</td><td>STS-2</td><td>瑞士</td>
+                    <td>120S-50Hz</td><td>2</td><td>Q330</td><td>美国</td><td>2</td>
+                </tr>
+                <tr>
+                    <td>Guralp CMG-3T</td><td>英国</td><td>120S-50Hz</td>
+                    <td>18</td><td>REFTEK 130</td><td>美国</td><td>120</td>
+                </tr>
+                <tr>
+                    <td>Guralp CMG-3ESP</td><td>英国</td><td>60S-50Hz</td>
+                    <td>52</td><td>REFTEK 130S</td><td>美国</td><td>50</td>
+                </tr>
+                <tr>
+                    <td>Guralp CMG-3ESP</td><td>英国</td><td>30S-50Hz</td>
+                    <td>100</td><td>Taurus</td><td>加拿大</td><td>110</td>
+                </tr>
+                <tr>
+                    <td>Trillium 120PA</td><td>加拿大</td><td>120S-50Hz</td>
+                    <td>152</td><td>Centaur</td><td>加拿大</td><td>158</td>
+                </tr>
+                <tr>
+                    <td>Trillium Horizon 120</td><td>加拿大</td><td>120S-150Hz</td><td>24</td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                    <td>Trillium CPH</td><td>加拿大</td><td>120S-108Hz</td><td>42</td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                    <td>Merdian Compact-PH</td><td>加拿大</td><td>120S-108Hz</td><td>4</td>
+                    <td rowspan="3" style="vertical-align: middle;text-align: center;">合计</td>
+                    <td>类别</td><td>数目</td>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="vertical-align: middle;">短周期</td><td>SmartSolo 3C</td>
+                    <td>中国</td><td>5Hz-200Hz</td><td>240</td><td>宽频带</td><td>488</td>
+                </tr>
+                <tr>
+                    <td>QS-10B</td><td>中国</td><td>10S-200Hz</td><td>200</td><td>短周期</td><td>440</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p><i class="fa fa-hand-o-right"></i><strong>借用仪器申请:</strong></p>
+        <p> &nbsp;&nbsp;&nbsp;&nbsp;1、凡本所承担的国家、中科院及基金委项目，任务书中规定有流动地震台阵观测任务的均可向本台阵申请借用仪器。在优先满足本所需求前提下，
+            另行审批所外用户的借用仪器申请。</p>
+        <p> &nbsp;&nbsp;&nbsp;&nbsp;2、台阵在每年1月和7月受理当年或下一年度的借用仪器申请，申请人必须为项目主持人。申请时应提交申请表(附件一)原件、被批准项目的申请书、
+            批准书、计划书复印件各壹份。 在受理期过后两个工作周之内，台阵人员会同有关专家共同研究调配仪器并将受理结果通知项目负责人。在台阵尚有闲置仪器情况下，短期观测
+            (半年以内)项目负责人可以随时提交借用仪器申请，台阵将及时调配仪器。</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;3、台阵将优先考虑曾投入资金支持台阵购置仪器的五个学科组的借用仪器申请。</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;4、台阵有权利不受理下列人员及其所在项目组人员的借用仪器申请。</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) 使用台阵仪器观测结束后，在规定期限内未向台阵提供全部原始数据的；</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) 不按协议规定如期归还台阵仪器的；</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) 私自将台阵仪器提供给第三方使用的。</p>
+
+        <p><i class="fa fa-hand-o-right"></i><strong>仪器领取及归还:</strong></p>
+        <p> &nbsp;&nbsp;&nbsp;&nbsp;1、 已获准使用台阵仪器的用户，应在野外观测开始前一个月内与台阵人员商定有关借用台阵仪器的具体事宜。在与台阵签订双方认可的协议并
+            预付地震仪器机时及数据分析费后，办理相关仪器领取手续。</p>
+        <p> &nbsp;&nbsp;&nbsp;&nbsp; 2、用户野外观测期间和结束后应按时归还借用的仪器。关于使用及归还仪器所需注意事项请参阅协议书中甲方职责及义务内容。</p>
+
+        <p><i class="fa fa-hand-o-right"></i><strong>数据管理及使用:</strong></p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1、用户在项目观测期间获得的原始数据必须及时提交台阵数据中心。</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2、在收到原始数据四个月内，台阵数据中心将按协议为用户截取地震数据（按SAC格式提供）。对于天然地震记录，依据中国地震台
+            网分中心提供的《中国地震目录》及台阵规定的记录长度截取；对于人工源记录，依据用户提供的截取数据时间段截取。用户需提供事件数据的存储介质费用或存储介质。如果用户
+            要求截取台阵规定标准之外的数据，应支付相关的数据服务费。</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  3、利用台阵仪器观测得到的地震资料必须通过台阵免费共享（用户经所在单位科研处审批以书面形式告知的国家明文规定不能公开资料除外），
+            共享最迟时间为自各台站观测期结束时的叁年之内。</p>
+
+        <p><i class="fa fa-hand-o-right"></i><strong>联系方式 :</strong></p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 仪器申请及数据服务请与下列相关人员联系：</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 艾印双 北京9825信箱</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中国科学院地质与地球物理研究所 邮政编码100029</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 电话：010-82998356    电子邮件： ysai@mail.iggcas.ac.cn</p>
+        <hr>
+
+        <p style="color:#23527C;><h5"><strong>地震仪器收费标准:</strong></h5></p>
+        <!--收费标准-->
+        <p><h4 class="text-center"><stronng>地震仪机时及数据分析费收费标准</stronng></h4></p>
+        <div class="col-md-12 table-responsive" style="margin-top: 5px;">
+            <table class="table table-bordered table-condensed">
+                <caption class="h5">1、宽频带地震仪机时及数据分析费按月计价，收费标准如下：</caption>
+                <thead>
+                <tr class="success">
+                    <th>成套仪器类型</th><th>数据分析费（元/台期）</th><th>机时费（元/台期）</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>STS-2、CMG-3T、Trillium 120PA、Trillium Horizon 120、Trillium PH-120、Trillium Compact-PH、Meridian Compact-PH型地震计；Q330、Taurus、
+                        Centaur、Reftek-130、Reftek-130S型采集器、除太阳能板及太阳能板充电器以外的辅助设备</td>
+                    <td>2400</td><td>1400</td>
+                </tr>
+                <tr>
+                    <td>Guralp CMG-3ESP型地震计；Reftek 130、DAS24-CAS型采集器、除太阳能板及太阳能板充电器以外的辅助设备</td>
+                    <td>1200</td>
+                    <td>1000</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+       <div class="col-md-12 table-responsive" style="margin-top: 5px;">
+           <table class="table table-bordered table-condensed">
+               <caption class="h5">2、短周期地震仪机时费按天计价，收费标准如下：</caption>
+               <thead>
+               <tr class="success">
+                   <th>成套仪器类型</th><th>机时费-所外（元/台期）</th><th>机时费-所内（元/台期）</th>
+               </tr>
+               </thead>
+               <tbody>
+               <tr>
+                   <td>SmartSolo、QS-10B短周期地震计</td>
+                   <td>20</td><td>12</td>
+               </tr>
+               </tbody>
+           </table>
+       </div>
+        <div class="col-md-12 table-responsive" style="margin-top: 5px;" >
+            <table class="table table-bordered table-condensed">
+                <caption class="h5">3、成套仪器中部分设备机时及数据分析费，收费标准如下：</caption>
+                <thead>
+                <tr class="success">
+                    <th>成套仪器基本配置以外的设备</th><th>数据分析费（元/台期）</th><th>机时费（元/台期）</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>进口仪套外配置：130或Taurus硬盘</td><td>0</td><td>90</td></tr>
+                <tr><td>GPS</td><td>170</td><td>80</td></tr>
+                <tr><td>太阳能板(国产)</td><td>200</td><td>200</td></tr>
+                <tr><td>太阳能板充电器(国产)</td><td>30</td><td>30</td></tr>
+                <tr><td>电源充电器(国产)</td><td>20</td><td>40</td></tr>
+                <tr><td>电瓶(国产)</td><td>10</td><td>30</td></tr>
+                <tr><td>Reftek-130、Reftek-130S</td><td>600</td><td>600</td></tr>
+                <tr><td>Q330</td><td>600</td><td>600</td></tr>
+                <tr><td>Taurus、Centaur</td><td>600</td><td>600</td></tr>
+                <tr><td>Guralp CMG-3ESP、</td><td>600</td><td>600</td></tr>
+                <tr><td>Trillium 120PA、Horizon、PH-120、 Compact-PH、Meridian Compact-PH</td><td>1800</td><td>900</td></tr>
+                <tr><td>STS-2</td><td>1800</td><td>900</td></tr>
+                <tr><td>国产仪套外配置：>6G硬盘</td><td>0</td><td>40</td></tr>
+                <tr></tr>
+                <tr><td>GPS</td><td>60</td><td>100</td></tr>
+                <tr><td>太阳能板</td><td>200</td><td>200</td></tr>
+                <tr><td>太阳能板充电器</td><td>30</td><td>30</td></tr>
+                <tr><td>电源充电器</td><td>20</td><td>40</td></tr>
+                <tr><td>电源</td><td>10</td><td>30</td></tr>
+                <tr><td>DAS24-CAS/td><td>300</td><td>270</td></tr>
+                <tr><td>笔记本电脑*</td><td>0</td><td>600</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p>注：* 笔记本电脑，在架设和中途检查仪器时向台阵借用，回来后及时归还，以便周转。计算月数为累计30天为1个月，含借、还日，不足1个月按1个月计。</p>
+        <p>4、项目负责人为本所人员时，机时与数据分析费按上述收费 标准的50%-80%执行，台阵实验室每年12月份在实验室网站上公布下年度机时与数据分析费的收费折扣值；项目负责人为所外人员时，
+            机时与数据分析费按收费标准的100%执行。所内项目负责人在领用仪器时按计划时间、实际仪器数量预付内部支票；所外单位在与台阵签订完协议后按项目划拨。观测期满归还仪器时结算上述费
+            用，多退少补。
+        </p>
+        <p>
+            5、原则上每一课题每一期的观测期限为一年。超过一年并且总观测期不足二年的，超出期限部分的机时与数据分析在原有收费标准上加收50%的机时费；观测期限超过二年以上的，二年以上期间
+            的机时费为原有收费标准的两倍。
+        </p>
+        <p>
+            6、当项目需要购置台阵未配置的辅助设备，并在观测结束后交归台阵统一管理，继续提供他人使用的,经双方协商一致后，设备费由项目支付1/3至2/3，台阵支付余额部分，该项目该期免费借用；
+            如有不归还台阵的设备，项目应补交台阵支付的部分，并加收10%管理费。
+        </p>
+        <p><h5 class="text-right"><strong>地震台阵探测实验室</strong></h5></p>
+        <p><h5 class="text-right"><strong>2019年9月1日</strong></h5></p>
+    </div>
+</div>
+{/block}
